@@ -1,5 +1,6 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, Redirect } from "wouter";
 import { Toaster } from "@/components/ui/toaster";
+import { Loader2 } from "lucide-react";
 import NotFound from "@/pages/not-found";
 import AuthPage from "@/pages/auth-page";
 import HomePage from "@/pages/home-page";
@@ -11,7 +12,30 @@ import ProjectDetail from "@/pages/project-detail";
 import EstimatesPage from "@/pages/estimates-page";
 import FilesPage from "@/pages/files-page";
 import ClientView from "@/pages/client-view";
-import { ProtectedRoute } from "./lib/protected-route";
+import { useAuth } from "@/hooks/use-auth";
+
+// Internal protected route component
+function ProtectedRouteComponent({
+  component: Component
+}: {
+  component: () => JSX.Element;
+}) {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-border" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Redirect to="/auth" />;
+  }
+
+  return <Component />;
+}
 
 function App() {
   return (
@@ -21,13 +45,27 @@ function App() {
         <Route path="/home" component={HomePage} />
         <Route path="/auth" component={AuthPage} />
         <Route path="/client-view/:uuid" component={ClientView} />
-        <ProtectedRoute path="/dashboard" component={DashboardPage} />
-        <ProtectedRoute path="/clients" component={ClientsPage} />
-        <ProtectedRoute path="/clients/:id" component={ClientDetail} />
-        <ProtectedRoute path="/projects" component={ProjectsPage} />
-        <ProtectedRoute path="/projects/:id" component={ProjectDetail} />
-        <ProtectedRoute path="/estimates" component={EstimatesPage} />
-        <ProtectedRoute path="/files" component={FilesPage} />
+        <Route path="/dashboard">
+          <ProtectedRouteComponent component={DashboardPage} />
+        </Route>
+        <Route path="/clients">
+          <ProtectedRouteComponent component={ClientsPage} />
+        </Route>
+        <Route path="/clients/:id">
+          <ProtectedRouteComponent component={ClientDetail} />
+        </Route>
+        <Route path="/projects">
+          <ProtectedRouteComponent component={ProjectsPage} />
+        </Route>
+        <Route path="/projects/:id">
+          <ProtectedRouteComponent component={ProjectDetail} />
+        </Route>
+        <Route path="/estimates">
+          <ProtectedRouteComponent component={EstimatesPage} />
+        </Route>
+        <Route path="/files">
+          <ProtectedRouteComponent component={FilesPage} />
+        </Route>
         <Route component={NotFound} />
       </Switch>
       <Toaster />
