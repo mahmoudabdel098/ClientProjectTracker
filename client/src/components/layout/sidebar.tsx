@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
+import { AuthContext } from "@/hooks/use-auth";
 import { 
   LayoutDashboard, 
   Users, 
@@ -13,6 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 
 type SidebarProps = {
   isMobileOpen: boolean;
@@ -21,19 +23,37 @@ type SidebarProps = {
 
 export default function Sidebar({ isMobileOpen, onCloseMobile }: SidebarProps) {
   const [location] = useLocation();
-  const { user, logoutMutation } = useAuth();
+  const authContext = useContext(AuthContext);
   const { toast } = useToast();
   const [userName, setUserName] = useState("");
+  const [userPlan, setUserPlan] = useState("");
 
   useEffect(() => {
-    if (user) {
-      setUserName(user.fullName || user.username);
-    }
-  }, [user]);
+    const fetchUser = async () => {
+      try {
+        const res = await apiRequest("GET", "/api/user");
+        if (res.ok) {
+          const userData = await res.json();
+          setUserName(userData.fullName || userData.username);
+          setUserPlan(userData.planType || "Free Plan");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const handleLogout = async () => {
     try {
-      await logoutMutation.mutateAsync();
+      if (authContext) {
+        await authContext.logoutMutation.mutateAsync();
+      } else {
+        // Fallback
+        await apiRequest("POST", "/api/logout");
+        window.location.href = "/auth";
+      }
     } catch (error) {
       toast({
         title: "Logout Error",
@@ -64,12 +84,12 @@ export default function Sidebar({ isMobileOpen, onCloseMobile }: SidebarProps) {
     <aside className={sidebarClasses}>
       <div className="p-4 border-b">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center">
+          <div className="flex items-center cursor-pointer" onClick={() => window.location.href="/"}>
             <div className="h-8 w-8 rounded-md bg-primary-600 flex items-center justify-center">
               <span className="text-white text-xl font-bold">C</span>
             </div>
             <span className="ml-2 text-xl font-semibold text-gray-800">ClientPro</span>
-          </Link>
+          </div>
           <button 
             onClick={onCloseMobile} 
             className="text-gray-500 md:hidden"
@@ -89,17 +109,16 @@ export default function Sidebar({ isMobileOpen, onCloseMobile }: SidebarProps) {
         <ul>
           {navLinks.map((link) => (
             <li key={link.href} className="px-2">
-              <Link href={link.href}>
-                <a 
-                  className={`flex items-center px-2 py-2 text-sm font-medium rounded-md ${
-                    location === link.href 
-                      ? "text-primary-700 bg-primary-50" 
-                      : "text-gray-700 hover:text-primary-700 hover:bg-primary-50"
-                  }`}
-                >
-                  {link.icon}
-                  {link.label}
-                </a>
+              <Link 
+                href={link.href}
+                className={`flex items-center px-2 py-2 text-sm font-medium rounded-md ${
+                  location === link.href 
+                    ? "text-primary-700 bg-primary-50" 
+                    : "text-gray-700 hover:text-primary-700 hover:bg-primary-50"
+                }`}
+              >
+                {link.icon}
+                {link.label}
               </Link>
             </li>
           ))}
@@ -111,17 +130,16 @@ export default function Sidebar({ isMobileOpen, onCloseMobile }: SidebarProps) {
         <ul>
           {settingsLinks.map((link) => (
             <li key={link.href} className="px-2">
-              <Link href={link.href}>
-                <a 
-                  className={`flex items-center px-2 py-2 text-sm font-medium rounded-md ${
-                    location === link.href 
-                      ? "text-primary-700 bg-primary-50" 
-                      : "text-gray-700 hover:text-primary-700 hover:bg-primary-50"
-                  }`}
-                >
-                  {link.icon}
-                  {link.label}
-                </a>
+              <Link 
+                href={link.href}
+                className={`flex items-center px-2 py-2 text-sm font-medium rounded-md ${
+                  location === link.href 
+                    ? "text-primary-700 bg-primary-50" 
+                    : "text-gray-700 hover:text-primary-700 hover:bg-primary-50"
+                }`}
+              >
+                {link.icon}
+                {link.label}
               </Link>
             </li>
           ))}
@@ -135,7 +153,7 @@ export default function Sidebar({ isMobileOpen, onCloseMobile }: SidebarProps) {
           </div>
           <div className="ml-3">
             <p className="text-sm font-medium text-gray-800">{userName}</p>
-            <p className="text-xs text-gray-500">{user?.planType || "Free Plan"}</p>
+            <p className="text-xs text-gray-500">{userPlan}</p>
           </div>
           <div className="ml-auto">
             <Button 
