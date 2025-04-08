@@ -16,7 +16,8 @@
     "all": "All",
     "none": "None",
     "welcome": "Welcome",
-    "close": "Close"
+    "close": "Close",
+    "viewAll": "View all"
   },
   "home": {
     "title": "Manage clients and projects with ease",
@@ -81,21 +82,25 @@
     "settings": "Settings",
     "logout": "Logout"
   },
+  "sidebar": {
+    "main": "Main"
+  },
   "dashboard": {
-    "welcome": "Welcome back",
+    "title": "Dashboard",
+    "welcome": "Welcome back, {{name}}",
     "summary": "Here's a summary of your business:",
-    "activeClients": "Active Clients",
-    "activeProjects": "Active Projects",
-    "pendingEstimates": "Pending Estimates",
-    "filesShared": "Files Shared",
     "recentProjects": "Recent Projects",
     "viewAllProjects": "View all projects",
     "recentActivity": "Recent Activity",
     "viewAllActivity": "View all activity",
-    "activeClients": "Active Clients",
-    "viewAllClients": "View all clients",
     "noProjects": "No projects yet",
-    "createFirstProject": "Create your first project"
+    "createProject": "Create your first project",
+    "stats": {
+      "clients": "Active Clients",
+      "projects": "Active Projects",
+      "estimates": "Pending Estimates",
+      "files": "Files Shared"
+    }
   },
   "clients": {
     "title": "Clients",

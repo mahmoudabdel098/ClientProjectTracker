@@ -1,13 +1,17 @@
-import { useState } from "react";
-import { Bell, Plus } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Bell, Plus, User, LogOut, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { useLocation } from "wouter";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 type HeaderProps = {
   onOpenSidebar: () => void;
@@ -15,6 +19,24 @@ type HeaderProps = {
 
 export default function Header({ onOpenSidebar }: HeaderProps) {
   const [, navigate] = useLocation();
+  const { toast } = useToast();
+  const [userData, setUserData] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await apiRequest("GET", "/api/user");
+        if (res.ok) {
+          const user = await res.json();
+          setUserData(user);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const handleAddNew = (type: string) => {
     switch (type) {
@@ -30,6 +52,34 @@ export default function Header({ onOpenSidebar }: HeaderProps) {
       default:
         break;
     }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await apiRequest("POST", "/api/logout");
+      toast({
+        title: "Logged out successfully",
+        description: "You have been logged out of your account",
+      });
+      navigate("/auth");
+    } catch (error) {
+      toast({
+        title: "Logout failed",
+        description: "There was an error logging out. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Get user initials for avatar
+  const getInitials = () => {
+    if (!userData || !userData.fullName) return "U";
+    return userData.fullName
+      .split(" ")
+      .map((n: string) => n[0])
+      .join("")
+      .toUpperCase()
+      .substring(0, 2);
   };
 
   return (
@@ -63,6 +113,38 @@ export default function Header({ onOpenSidebar }: HeaderProps) {
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleAddNew("estimate")}>
                 New Estimate
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="rounded-full h-8 w-8">
+                <Avatar className="h-8 w-8">
+                  <AvatarFallback className="bg-primary-100 text-primary-700">
+                    {getInitials()}
+                  </AvatarFallback>
+                </Avatar>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <div className="px-2 py-1.5">
+                <p className="text-sm font-medium">{userData?.fullName || userData?.username}</p>
+                <p className="text-xs text-muted-foreground">{userData?.email}</p>
+              </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => navigate("/profile")}>
+                <User className="mr-2 h-4 w-4" />
+                Profile
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/settings")}>
+                <Settings className="mr-2 h-4 w-4" />
+                Settings
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                Logout
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

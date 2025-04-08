@@ -16,7 +16,8 @@
     "all": "Tutti",
     "none": "Nessuno",
     "welcome": "Benvenuto",
-    "close": "Chiudi"
+    "close": "Chiudi",
+    "viewAll": "Vedi tutti"
   },
   "home": {
     "title": "Gestisci clienti e progetti con facilità",
@@ -81,21 +82,25 @@
     "settings": "Impostazioni",
     "logout": "Esci"
   },
+  "sidebar": {
+    "main": "Principale"
+  },
   "dashboard": {
-    "welcome": "Bentornato",
+    "title": "Dashboard",
+    "welcome": "Bentornato, {{name}}",
     "summary": "Ecco un riepilogo della tua attività:",
-    "activeClients": "Clienti Attivi",
-    "activeProjects": "Progetti Attivi",
-    "pendingEstimates": "Preventivi in Attesa",
-    "filesShared": "File Condivisi",
     "recentProjects": "Progetti Recenti",
     "viewAllProjects": "Visualizza tutti i progetti",
     "recentActivity": "Attività Recente",
     "viewAllActivity": "Visualizza tutte le attività",
-    "activeClients": "Clienti Attivi",
-    "viewAllClients": "Visualizza tutti i clienti",
     "noProjects": "Nessun progetto ancora",
-    "createFirstProject": "Crea il tuo primo progetto"
+    "createProject": "Crea il tuo primo progetto",
+    "stats": {
+      "clients": "Clienti Attivi",
+      "projects": "Progetti Attivi",
+      "estimates": "Preventivi in Attesa",
+      "files": "File Condivisi"
+    }
   },
   "clients": {
     "title": "Clienti",
