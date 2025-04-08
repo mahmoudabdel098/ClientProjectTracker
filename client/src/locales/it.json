@@ -1,58 +1,76 @@
 {
   "common": {
     "appName": "ClientPro",
-    "tagline": "Gestisci i tuoi clienti e progetti facilmente",
-    "welcome": "Bentornato, {{name}}",
     "loading": "Caricamento...",
-    "notFound": "Pagina non trovata",
-    "goBack": "Torna indietro",
-    "backToDashboard": "Torna alla dashboard",
-    "noData": "Nessun dato disponibile",
+    "error": "Si è verificato un errore",
     "save": "Salva",
     "cancel": "Annulla",
     "delete": "Elimina",
     "edit": "Modifica",
     "create": "Crea",
-    "status": "Stato",
+    "view": "Visualizza",
     "search": "Cerca",
     "filter": "Filtra",
-    "viewAll": "Vedi tutti"
+    "selectAll": "Seleziona tutto",
+    "deselectAll": "Deseleziona tutto",
+    "all": "Tutti",
+    "none": "Nessuno",
+    "welcome": "Benvenuto",
+    "close": "Chiudi"
+  },
+  "home": {
+    "title": "Gestisci clienti e progetti con facilità",
+    "subtitle": "ClientPro aiuta freelancer e piccole aziende a gestire clienti, monitorare progetti e condividere progressi tramite link di accesso sicuri.",
+    "getStarted": "Inizia Ora",
+    "learnMore": "Scopri di Più",
+    "preview": {
+      "clientName": "Cliente di Esempio",
+      "clientStatus": "Progetto Attivo"
+    },
+    "features": {
+      "title": "Semplifica il tuo flusso di lavoro",
+      "clientManagement": {
+        "title": "Gestione Clienti",
+        "description": "Crea e gestisci profili cliente dettagliati con informazioni di contatto e cronologia progetti."
+      },
+      "projectTracking": {
+        "title": "Monitoraggio Progetti",
+        "description": "Tieni traccia di avanzamento, attività e scadenze dei progetti con dashboard visive e aggiornamenti di stato."
+      },
+      "clientPortal": {
+        "title": "Portale Cliente",
+        "description": "Condividi aggiornamenti di progetto e file in modo sicuro con i clienti tramite link di accesso unici."
+      }
+    },
+    "auth": {
+      "title": "Inizia oggi stesso",
+      "subtitle": "Crea un account o accedi per iniziare a gestire i tuoi clienti e progetti",
+      "asSupplier": "Sono un Fornitore",
+      "asClient": "Sono un Cliente"
+    }
   },
   "auth": {
     "login": "Accedi",
     "register": "Registrati",
+    "loginTitle": "Bentornato",
+    "loginSubtitle": "Inserisci le tue credenziali per accedere al tuo account",
+    "registerTitle": "Crea un account",
+    "registerSubtitle": "Inserisci i tuoi dati per iniziare",
     "username": "Nome utente",
     "password": "Password",
-    "confirmPassword": "Conferma Password",
-    "fullName": "Nome completo",
+    "fullName": "Nome Completo",
     "email": "Email",
-    "loginSuccess": "Accesso effettuato con successo",
-    "loginFailed": "Accesso fallito",
-    "registerSuccess": "Registrazione completata con successo",
-    "registerFailed": "Registrazione fallita",
-    "logout": "Esci",
-    "logoutSuccess": "Hai effettuato il logout con successo",
+    "usernamePlaceholder": "Inserisci il tuo nome utente",
+    "passwordPlaceholder": "Inserisci la tua password",
+    "fullNamePlaceholder": "Inserisci il tuo nome completo",
+    "emailPlaceholder": "Inserisci la tua email",
+    "loggingIn": "Accesso in corso...",
+    "registering": "Creazione account in corso...",
+    "forgotPassword": "Password dimenticata?",
     "noAccount": "Non hai un account?",
-    "hasAccount": "Hai già un account?",
-    "enterUsername": "Inserisci il tuo nome utente",
-    "enterPassword": "Inserisci la tua password",
-    "createPassword": "Crea una password",
-    "confirmYourPassword": "Conferma la tua password",
-    "enterFullName": "Inserisci il tuo nome completo",
-    "enterEmail": "Inserisci la tua email"
-  },
-  "dashboard": {
-    "title": "Dashboard",
-    "stats": {
-      "activeClients": "Clienti Attivi",
-      "activeProjects": "Progetti Attivi",
-      "pendingEstimates": "Preventivi in Attesa",
-      "filesShared": "File Condivisi"
-    },
-    "recentProjects": "Progetti Recenti",
-    "recentActivity": "Attività Recenti",
-    "noProjects": "Nessun progetto",
-    "createFirstProject": "Crea il tuo primo progetto"
+    "haveAccount": "Hai già un account?",
+    "signUpNow": "Registrati ora",
+    "loginNow": "Accedi ora"
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -61,158 +79,133 @@
     "estimates": "Preventivi",
     "files": "File",
     "settings": "Impostazioni",
-    "account": "Account"
+    "logout": "Esci"
+  },
+  "dashboard": {
+    "welcome": "Bentornato",
+    "summary": "Ecco un riepilogo della tua attività:",
+    "activeClients": "Clienti Attivi",
+    "activeProjects": "Progetti Attivi",
+    "pendingEstimates": "Preventivi in Attesa",
+    "filesShared": "File Condivisi",
+    "recentProjects": "Progetti Recenti",
+    "viewAllProjects": "Visualizza tutti i progetti",
+    "recentActivity": "Attività Recente",
+    "viewAllActivity": "Visualizza tutte le attività",
+    "activeClients": "Clienti Attivi",
+    "viewAllClients": "Visualizza tutti i clienti",
+    "noProjects": "Nessun progetto ancora",
+    "createFirstProject": "Crea il tuo primo progetto"
   },
   "clients": {
     "title": "Clienti",
-    "newClient": "Nuovo Cliente",
-    "clientDetails": "Dettagli Cliente",
-    "clientProjects": "Progetti Cliente",
-    "editClient": "Modifica Cliente",
-    "deleteClient": "Elimina Cliente",
-    "deleteConfirm": "Sei sicuro di voler eliminare questo cliente? Tutti i progetti associati verranno eliminati.",
+    "add": "Aggiungi Cliente",
+    "edit": "Modifica Cliente",
+    "details": "Dettagli Cliente",
     "name": "Nome",
     "email": "Email",
     "phone": "Telefono",
     "company": "Azienda",
     "address": "Indirizzo",
-    "notes": "Note",
-    "noClients": "Nessun cliente",
-    "addFirstClient": "Aggiungi il tuo primo cliente"
+    "website": "Sito Web",
+    "projects": "Progetti",
+    "createNew": "Crea Nuovo Cliente",
+    "deleteConfirm": "Sei sicuro di voler eliminare questo cliente?",
+    "searchPlaceholder": "Cerca clienti..."
   },
   "projects": {
     "title": "Progetti",
-    "newProject": "Nuovo Progetto",
-    "projectDetails": "Dettagli Progetto",
-    "editProject": "Modifica Progetto",
-    "deleteProject": "Elimina Progetto",
-    "deleteConfirm": "Sei sicuro di voler eliminare questo progetto?",
+    "add": "Aggiungi Progetto",
+    "edit": "Modifica Progetto",
+    "details": "Dettagli Progetto",
     "name": "Nome",
-    "description": "Descrizione",
     "client": "Cliente",
+    "description": "Descrizione",
     "status": "Stato",
-    "startDate": "Data di Inizio",
-    "endDate": "Data di Fine",
+    "deadline": "Scadenza",
     "budget": "Budget",
-    "noProjects": "Nessun progetto",
-    "addFirstProject": "Aggiungi il tuo primo progetto",
+    "tasks": "Attività",
+    "files": "File",
+    "addTask": "Aggiungi Attività",
+    "createNew": "Crea Nuovo Progetto",
     "statuses": {
-      "pending": "In Attesa",
-      "in_progress": "In Corso",
-      "on_hold": "In Sospeso",
+      "planning": "Pianificazione",
+      "inProgress": "In Corso",
+      "onHold": "In Attesa",
       "completed": "Completato",
       "cancelled": "Annullato"
     },
-    "tasks": {
-      "title": "Attività",
-      "newTask": "Nuova Attività",
-      "editTask": "Modifica Attività",
-      "deleteTask": "Elimina Attività",
-      "name": "Nome",
-      "description": "Descrizione",
-      "status": "Stato",
-      "dueDate": "Scadenza",
-      "noTasks": "Nessuna attività",
-      "addFirstTask": "Aggiungi la tua prima attività",
-      "statuses": {
-        "to_do": "Da Fare",
-        "in_progress": "In Corso",
-        "review": "In Revisione",
-        "completed": "Completata"
-      }
-    },
-    "clientView": {
-      "title": "Dettagli Progetto",
-      "clientAccess": "Accesso Cliente",
-      "shareLink": "Link di Condivisione",
-      "copyLink": "Copia Link",
-      "linkCopied": "Link copiato negli appunti"
-    }
+    "deleteConfirm": "Sei sicuro di voler eliminare questo progetto?",
+    "searchPlaceholder": "Cerca progetti..."
   },
   "estimates": {
     "title": "Preventivi",
-    "newEstimate": "Nuovo Preventivo",
-    "estimateDetails": "Dettagli Preventivo",
-    "editEstimate": "Modifica Preventivo",
-    "deleteEstimate": "Elimina Preventivo",
-    "deleteConfirm": "Sei sicuro di voler eliminare questo preventivo?",
-    "name": "Nome",
-    "project": "Progetto",
+    "add": "Aggiungi Preventivo",
+    "edit": "Modifica Preventivo",
+    "details": "Dettagli Preventivo",
+    "number": "Numero Preventivo",
     "client": "Cliente",
+    "project": "Progetto",
     "date": "Data",
-    "dueDate": "Scadenza",
+    "dueDate": "Data Scadenza",
+    "subtotal": "Subtotale",
+    "tax": "Tasse",
     "total": "Totale",
-    "status": "Stato",
-    "noEstimates": "Nessun preventivo",
-    "addFirstEstimate": "Aggiungi il tuo primo preventivo",
-    "items": {
-      "title": "Voci Preventivo",
-      "newItem": "Nuova Voce",
-      "editItem": "Modifica Voce",
-      "deleteItem": "Elimina Voce",
-      "description": "Descrizione",
-      "quantity": "Quantità",
-      "unitPrice": "Prezzo Unitario",
-      "amount": "Importo",
-      "noItems": "Nessuna voce",
-      "addFirstItem": "Aggiungi la tua prima voce"
-    },
+    "items": "Articoli",
+    "addItem": "Aggiungi Articolo",
+    "createNew": "Crea Nuovo Preventivo",
     "statuses": {
       "draft": "Bozza",
       "sent": "Inviato",
-      "accepted": "Accettato",
-      "rejected": "Rifiutato",
-      "expired": "Scaduto"
-    }
+      "approved": "Approvato",
+      "rejected": "Rifiutato"
+    },
+    "deleteConfirm": "Sei sicuro di voler eliminare questo preventivo?",
+    "searchPlaceholder": "Cerca preventivi..."
   },
   "files": {
     "title": "File",
-    "upload": "Carica",
-    "uploadFiles": "Carica File",
-    "uploadSuccess": "File caricato con successo",
-    "uploadFailed": "Caricamento file fallito",
-    "deleteFile": "Elimina File",
-    "deleteConfirm": "Sei sicuro di voler eliminare questo file?",
+    "upload": "Carica File",
     "name": "Nome",
-    "type": "Tipo",
     "size": "Dimensione",
-    "uploadDate": "Data Caricamento",
-    "downloadFile": "Scarica File",
-    "noFiles": "Nessun file",
-    "uploadFirstFile": "Carica il tuo primo file",
-    "dragAndDrop": "Trascina e rilascia i file qui o clicca per sfogliare"
+    "type": "Tipo",
+    "uploadedBy": "Caricato Da",
+    "uploadedOn": "Caricato Il",
+    "download": "Scarica",
+    "preview": "Anteprima",
+    "deleteConfirm": "Sei sicuro di voler eliminare questo file?",
+    "searchPlaceholder": "Cerca file..."
   },
   "activities": {
-    "title": "Feed Attività",
-    "noActivities": "Nessuna attività",
-    "types": {
-      "client_created": "Cliente creato",
-      "client_updated": "Cliente aggiornato",
-      "client_deleted": "Cliente eliminato",
-      "project_created": "Progetto creato",
-      "project_updated": "Progetto aggiornato",
-      "project_deleted": "Progetto eliminato",
-      "task_created": "Attività creata",
-      "task_updated": "Attività aggiornata",
-      "task_completed": "Attività completata",
-      "task_deleted": "Attività eliminata",
-      "estimate_created": "Preventivo creato",
-      "estimate_updated": "Preventivo aggiornato",
-      "estimate_sent": "Preventivo inviato",
-      "estimate_accepted": "Preventivo accettato",
-      "estimate_rejected": "Preventivo rifiutato",
-      "estimate_deleted": "Preventivo eliminato",
-      "file_uploaded": "File caricato",
-      "file_deleted": "File eliminato"
-    }
+    "projectCreated": "Progetto creato",
+    "projectUpdated": "Progetto aggiornato",
+    "projectDeleted": "Progetto eliminato",
+    "clientCreated": "Cliente creato",
+    "clientUpdated": "Cliente aggiornato",
+    "clientDeleted": "Cliente eliminato",
+    "taskCreated": "Attività creata",
+    "taskUpdated": "Attività aggiornata",
+    "taskCompleted": "Attività completata",
+    "taskDeleted": "Attività eliminata",
+    "fileUploaded": "File caricato",
+    "fileDeleted": "File eliminato",
+    "estimateCreated": "Preventivo creato",
+    "estimateUpdated": "Preventivo aggiornato",
+    "estimateDeleted": "Preventivo eliminato",
+    "timeAgo": "fa"
   },
-  "validation": {
-    "required": "Questo campo è obbligatorio",
-    "minLength": "Deve essere di almeno {{min}} caratteri",
-    "maxLength": "Deve essere di massimo {{max}} caratteri",
-    "email": "Indirizzo email non valido",
-    "passwordMatch": "Le password non coincidono",
-    "positiveNumber": "Deve essere un numero positivo",
-    "dateRange": "La data di fine deve essere successiva alla data di inizio"
+  "footer": {
+    "description": "ClientPro aiuta freelancer e piccole aziende a gestire clienti e progetti in modo efficiente.",
+    "links": {
+      "title": "Link",
+      "home": "Home",
+      "features": "Funzionalità",
+      "pricing": "Prezzi",
+      "contact": "Contatti"
+    },
+    "contact": {
+      "title": "Contattaci"
+    },
+    "rights": "Tutti i diritti riservati."
   }
 }

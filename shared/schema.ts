@@ -8,8 +8,9 @@ export const users = pgTable("users", {
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
   fullName: text("full_name").notNull(),
-  email: text("email").notNull(),
+  email: text("email"),
   planType: text("plan_type").default("free"),
+  userType: text("user_type").default("supplier"),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
@@ -17,6 +18,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
   password: true,
   fullName: true,
   email: true,
+  userType: true,
 });
 
 // Client schema
