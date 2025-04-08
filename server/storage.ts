@@ -373,4 +373,357 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+import { db } from "./db";
+import connectPg from "connect-pg-simple";
+import { eq, desc, and } from "drizzle-orm";
+import { Pool } from '@neondatabase/serverless';
+
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const PostgresSessionStore = connectPg(session);
+
+export class DatabaseStorage implements IStorage {
+  sessionStore: any; // Using 'any' to bypass TS error
+
+  constructor() {
+    this.sessionStore = new PostgresSessionStore({ 
+      pool,
+      createTableIfMissing: true
+    });
+  }
+
+  // User methods
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, id));
+    return user || undefined;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.username, username));
+    return user || undefined;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const userWithDefaults = {
+      ...insertUser,
+      planType: insertUser.planType || "free"
+    };
+    const [user] = await db
+      .insert(users)
+      .values(userWithDefaults)
+      .returning();
+    return user;
+  }
+
+  // Client methods
+  async getClients(userId: number): Promise<Client[]> {
+    return db
+      .select()
+      .from(clients)
+      .where(eq(clients.userId, userId))
+      .orderBy(desc(clients.id));
+  }
+
+  async getClient(id: number): Promise<Client | undefined> {
+    const [client] = await db
+      .select()
+      .from(clients)
+      .where(eq(clients.id, id));
+    return client || undefined;
+  }
+
+  async createClient(insertClient: InsertClient): Promise<Client> {
+    const clientWithDefaults = {
+      ...insertClient,
+      createdAt: new Date()
+    };
+    const [client] = await db
+      .insert(clients)
+      .values(clientWithDefaults)
+      .returning();
+    return client;
+  }
+
+  async updateClient(id: number, clientUpdate: Partial<Client>): Promise<Client | undefined> {
+    const [updated] = await db
+      .update(clients)
+      .set(clientUpdate)
+      .where(eq(clients.id, id))
+      .returning();
+    return updated || undefined;
+  }
+
+  async deleteClient(id: number): Promise<boolean> {
+    await db
+      .delete(clients)
+      .where(eq(clients.id, id));
+    return true;
+  }
+
+  // Project methods
+  async getProjects(userId: number): Promise<Project[]> {
+    return db
+      .select()
+      .from(projects)
+      .where(eq(projects.userId, userId))
+      .orderBy(desc(projects.id));
+  }
+
+  async getProjectsByClient(clientId: number): Promise<Project[]> {
+    return db
+      .select()
+      .from(projects)
+      .where(eq(projects.clientId, clientId))
+      .orderBy(desc(projects.id));
+  }
+
+  async getProject(id: number): Promise<Project | undefined> {
+    const [project] = await db
+      .select()
+      .from(projects)
+      .where(eq(projects.id, id));
+    return project || undefined;
+  }
+
+  async getProjectByUuid(uuid: string): Promise<Project | undefined> {
+    const [project] = await db
+      .select()
+      .from(projects)
+      .where(eq(projects.uuid, uuid));
+    return project || undefined;
+  }
+
+  async createProject(insertProject: InsertProject): Promise<Project> {
+    const projectWithDefaults = {
+      ...insertProject,
+      uuid: uuidv4(),
+      progress: 0,
+      createdAt: new Date()
+    };
+    const [project] = await db
+      .insert(projects)
+      .values(projectWithDefaults)
+      .returning();
+    return project;
+  }
+
+  async updateProject(id: number, projectUpdate: Partial<Project>): Promise<Project | undefined> {
+    const [updated] = await db
+      .update(projects)
+      .set(projectUpdate)
+      .where(eq(projects.id, id))
+      .returning();
+    return updated || undefined;
+  }
+
+  async deleteProject(id: number): Promise<boolean> {
+    await db
+      .delete(projects)
+      .where(eq(projects.id, id));
+    return true;
+  }
+
+  // Project tasks methods
+  async getProjectTasks(projectId: number): Promise<ProjectTask[]> {
+    return db
+      .select()
+      .from(projectTasks)
+      .where(eq(projectTasks.projectId, projectId))
+      .orderBy(desc(projectTasks.id));
+  }
+
+  async getProjectTask(id: number): Promise<ProjectTask | undefined> {
+    const [task] = await db
+      .select()
+      .from(projectTasks)
+      .where(eq(projectTasks.id, id));
+    return task || undefined;
+  }
+
+  async createProjectTask(insertTask: InsertProjectTask): Promise<ProjectTask> {
+    const taskWithDefaults = {
+      ...insertTask,
+      createdAt: new Date()
+    };
+    const [task] = await db
+      .insert(projectTasks)
+      .values(taskWithDefaults)
+      .returning();
+    return task;
+  }
+
+  async updateProjectTask(id: number, taskUpdate: Partial<ProjectTask>): Promise<ProjectTask | undefined> {
+    const [updated] = await db
+      .update(projectTasks)
+      .set(taskUpdate)
+      .where(eq(projectTasks.id, id))
+      .returning();
+    return updated || undefined;
+  }
+
+  async deleteProjectTask(id: number): Promise<boolean> {
+    await db
+      .delete(projectTasks)
+      .where(eq(projectTasks.id, id));
+    return true;
+  }
+
+  // File methods
+  async getFiles(projectId: number): Promise<File[]> {
+    return db
+      .select()
+      .from(files)
+      .where(eq(files.projectId, projectId))
+      .orderBy(desc(files.id));
+  }
+
+  async getFile(id: number): Promise<File | undefined> {
+    const [file] = await db
+      .select()
+      .from(files)
+      .where(eq(files.id, id));
+    return file || undefined;
+  }
+
+  async createFile(insertFile: InsertFile): Promise<File> {
+    const fileWithDefaults = {
+      ...insertFile,
+      createdAt: new Date()
+    };
+    const [file] = await db
+      .insert(files)
+      .values(fileWithDefaults)
+      .returning();
+    return file;
+  }
+
+  async deleteFile(id: number): Promise<boolean> {
+    await db
+      .delete(files)
+      .where(eq(files.id, id));
+    return true;
+  }
+
+  // Estimate methods
+  async getEstimates(userId: number): Promise<Estimate[]> {
+    return db
+      .select()
+      .from(estimates)
+      .where(eq(estimates.userId, userId))
+      .orderBy(desc(estimates.id));
+  }
+
+  async getEstimatesByProject(projectId: number): Promise<Estimate[]> {
+    return db
+      .select()
+      .from(estimates)
+      .where(eq(estimates.projectId, projectId))
+      .orderBy(desc(estimates.id));
+  }
+
+  async getEstimate(id: number): Promise<Estimate | undefined> {
+    const [estimate] = await db
+      .select()
+      .from(estimates)
+      .where(eq(estimates.id, id));
+    return estimate || undefined;
+  }
+
+  async createEstimate(insertEstimate: InsertEstimate): Promise<Estimate> {
+    const estimateWithDefaults = {
+      ...insertEstimate,
+      createdAt: new Date()
+    };
+    const [estimate] = await db
+      .insert(estimates)
+      .values(estimateWithDefaults)
+      .returning();
+    return estimate;
+  }
+
+  async updateEstimate(id: number, estimateUpdate: Partial<Estimate>): Promise<Estimate | undefined> {
+    const [updated] = await db
+      .update(estimates)
+      .set(estimateUpdate)
+      .where(eq(estimates.id, id))
+      .returning();
+    return updated || undefined;
+  }
+
+  async deleteEstimate(id: number): Promise<boolean> {
+    await db
+      .delete(estimates)
+      .where(eq(estimates.id, id));
+    return true;
+  }
+
+  // Estimate items methods
+  async getEstimateItems(estimateId: number): Promise<EstimateItem[]> {
+    return db
+      .select()
+      .from(estimateItems)
+      .where(eq(estimateItems.estimateId, estimateId))
+      .orderBy(desc(estimateItems.id));
+  }
+
+  async createEstimateItem(insertItem: InsertEstimateItem): Promise<EstimateItem> {
+    const [item] = await db
+      .insert(estimateItems)
+      .values(insertItem)
+      .returning();
+    return item;
+  }
+
+  async updateEstimateItem(id: number, itemUpdate: Partial<EstimateItem>): Promise<EstimateItem | undefined> {
+    const [updated] = await db
+      .update(estimateItems)
+      .set(itemUpdate)
+      .where(eq(estimateItems.id, id))
+      .returning();
+    return updated || undefined;
+  }
+
+  async deleteEstimateItem(id: number): Promise<boolean> {
+    await db
+      .delete(estimateItems)
+      .where(eq(estimateItems.id, id));
+    return true;
+  }
+
+  // Activity methods
+  async getActivities(userId: number, limit: number = 20): Promise<Activity[]> {
+    return db
+      .select()
+      .from(activities)
+      .where(eq(activities.userId, userId))
+      .orderBy(desc(activities.createdAt))
+      .limit(limit);
+  }
+
+  async getActivitiesByProject(projectId: number): Promise<Activity[]> {
+    return db
+      .select()
+      .from(activities)
+      .where(eq(activities.projectId, projectId))
+      .orderBy(desc(activities.createdAt));
+  }
+
+  async createActivity(insertActivity: InsertActivity): Promise<Activity> {
+    const activityWithDefaults = {
+      ...insertActivity,
+      createdAt: new Date()
+    };
+    const [activity] = await db
+      .insert(activities)
+      .values(activityWithDefaults)
+      .returning();
+    return activity;
+  }
+}
+
+export const storage = new DatabaseStorage();
