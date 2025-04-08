@@ -1,7 +1,7 @@
-import { useContext } from "react";
-import { useAuth } from "@/hooks/use-auth";
+import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Redirect, Route } from "wouter";
+import { apiRequest } from "@/lib/queryClient";
 
 export function ProtectedRoute({
   path,
@@ -10,7 +10,29 @@ export function ProtectedRoute({
   path: string;
   component: () => JSX.Element;
 }) {
-  const { user, isLoading } = useAuth();
+  const [user, setUser] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        setIsLoading(true);
+        const res = await apiRequest("GET", "/api/user");
+        if (res.ok) {
+          const userData = await res.json();
+          setUser(userData);
+        } else {
+          setUser(null);
+        }
+      } catch (error) {
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
 
   if (isLoading) {
     return (

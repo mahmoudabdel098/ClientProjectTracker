@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useAuth } from "@/hooks/use-auth";
 import { useLocation } from "wouter";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -17,6 +16,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2 } from "lucide-react";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 const loginSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
@@ -36,15 +37,29 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function AuthPage() {
   const [activeTab, setActiveTab] = useState<string>("login");
-  const { user, loginMutation, registerMutation } = useAuth();
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
   const [, navigate] = useLocation();
+  const { toast } = useToast();
 
-  // Redirect if already logged in
+  // Check if user is already logged in
   useEffect(() => {
-    if (user) {
-      navigate("/");
+    async function checkAuthStatus() {
+      try {
+        const res = await apiRequest("GET", "/api/user");
+        if (res.ok) {
+          const userData = await res.json();
+          if (userData) {
+            navigate("/dashboard");
+          }
+        }
+      } catch (error) {
+        // Not logged in, stay on auth page
+      }
     }
-  }, [user, navigate]);
+    
+    checkAuthStatus();
+  }, [navigate]);
 
   // Login form setup
   const loginForm = useForm<LoginFormValues>({
@@ -68,13 +83,47 @@ export default function AuthPage() {
   });
 
   async function onLoginSubmit(data: LoginFormValues) {
-    await loginMutation.mutateAsync(data);
+    try {
+      setIsLoggingIn(true);
+      const res = await apiRequest("POST", "/api/login", data);
+      const user = await res.json();
+      toast({
+        title: "Login successful",
+        description: `Welcome back, ${user.username}!`,
+      });
+      navigate("/dashboard");
+    } catch (error) {
+      toast({
+        title: "Login failed",
+        description: error instanceof Error ? error.message : "Invalid credentials",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoggingIn(false);
+    }
   }
 
   async function onRegisterSubmit(data: RegisterFormValues) {
-    // Remove confirmPassword as it's not in the schema
-    const { confirmPassword, ...registrationData } = data;
-    await registerMutation.mutateAsync(registrationData);
+    try {
+      setIsRegistering(true);
+      // Remove confirmPassword as it's not in the schema
+      const { confirmPassword, ...registrationData } = data;
+      const res = await apiRequest("POST", "/api/register", registrationData);
+      const user = await res.json();
+      toast({
+        title: "Registration successful",
+        description: "Your account has been created!",
+      });
+      navigate("/dashboard");
+    } catch (error) {
+      toast({
+        title: "Registration failed",
+        description: error instanceof Error ? error.message : "Registration failed. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsRegistering(false);
+    }
   }
 
   return (
@@ -132,9 +181,9 @@ export default function AuthPage() {
                   <Button 
                     type="submit" 
                     className="w-full" 
-                    disabled={loginMutation.isPending}
+                    disabled={isLoggingIn}
                   >
-                    {loginMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {isLoggingIn && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Login
                   </Button>
                 </form>
@@ -230,9 +279,9 @@ export default function AuthPage() {
                   <Button 
                     type="submit" 
                     className="w-full" 
-                    disabled={registerMutation.isPending}
+                    disabled={isRegistering}
                   >
-                    {registerMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {isRegistering && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Register
                   </Button>
                 </form>
