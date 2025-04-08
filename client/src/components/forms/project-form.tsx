@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { insertProjectSchema } from "@shared/schema";
 import { useQuery } from "@tanstack/react-query";
 import { Client } from "@shared/schema";
+import { apiRequest } from "@/lib/queryClient";
 import {
   Form,
   FormControl,
@@ -61,7 +62,24 @@ export default function ProjectForm({
   isSubmitting = false,
   preselectedClientId
 }: ProjectFormProps) {
-  const { user } = useAuth();
+  const [userData, setUserData] = useState(null);
+  
+  // Fetch user data
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await apiRequest("GET", "/api/user");
+        if (res.ok) {
+          const user = await res.json();
+          setUserData(user);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
   
   // Fetch clients for dropdown
   const { data: clients = [], isLoading: clientsLoading } = useQuery<Client[]>({
