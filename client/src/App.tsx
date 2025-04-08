@@ -14,14 +14,10 @@ import FilesPage from "@/pages/files-page";
 import ClientView from "@/pages/client-view";
 import { useAuth } from "@/hooks/use-auth";
 
-// Internal protected route component
-function ProtectedRouteComponent({
-  component: Component
-}: {
-  component: () => JSX.Element;
-}) {
+// Protected route component that uses useAuth
+function ProtectedRoute({ component: Component }: { component: () => JSX.Element }) {
   const { user, isLoading } = useAuth();
-
+  
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -29,11 +25,11 @@ function ProtectedRouteComponent({
       </div>
     );
   }
-
+  
   if (!user) {
     return <Redirect to="/auth" />;
   }
-
+  
   return <Component />;
 }
 
@@ -46,25 +42,25 @@ function App() {
         <Route path="/auth" component={AuthPage} />
         <Route path="/client-view/:uuid" component={ClientView} />
         <Route path="/dashboard">
-          <ProtectedRouteComponent component={DashboardPage} />
+          {() => <ProtectedRoute component={DashboardPage} />}
         </Route>
         <Route path="/clients">
-          <ProtectedRouteComponent component={ClientsPage} />
+          {() => <ProtectedRoute component={ClientsPage} />}
         </Route>
         <Route path="/clients/:id">
-          <ProtectedRouteComponent component={ClientDetail} />
+          {() => <ProtectedRoute component={ClientDetail} />}
         </Route>
         <Route path="/projects">
-          <ProtectedRouteComponent component={ProjectsPage} />
+          {() => <ProtectedRoute component={ProjectsPage} />}
         </Route>
         <Route path="/projects/:id">
-          <ProtectedRouteComponent component={ProjectDetail} />
+          {() => <ProtectedRoute component={ProjectDetail} />}
         </Route>
         <Route path="/estimates">
-          <ProtectedRouteComponent component={EstimatesPage} />
+          {() => <ProtectedRoute component={EstimatesPage} />}
         </Route>
         <Route path="/files">
-          <ProtectedRouteComponent component={FilesPage} />
+          {() => <ProtectedRoute component={FilesPage} />}
         </Route>
         <Route component={NotFound} />
       </Switch>

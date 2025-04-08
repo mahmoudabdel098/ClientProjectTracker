@@ -66,7 +66,7 @@ export interface IStorage {
   getActivitiesByProject(projectId: number): Promise<Activity[]>;
   createActivity(activity: InsertActivity): Promise<Activity>;
 
-  sessionStore: session.SessionStore;
+  sessionStore: any; // Uso di any per evitare problemi con il tipo SessionStore
 }
 
 export class MemStorage implements IStorage {
@@ -87,7 +87,7 @@ export class MemStorage implements IStorage {
   currentEstimateId: number;
   currentEstimateItemId: number;
   currentActivityId: number;
-  sessionStore: session.SessionStore;
+  sessionStore: any;
 
   constructor() {
     this.users = new Map();
