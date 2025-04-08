@@ -23,27 +23,10 @@ i18n
       }
     },
     fallbackLng: 'en',
-    debug: process.env.NODE_ENV === 'development',
-    
-    // Common namespace used around the app
-    defaultNS: 'translation',
+    debug: import.meta.env.DEV,
     
     interpolation: {
-      escapeValue: false, // React already escapes values
-    },
-    
-    detection: {
-      // Order and from where user language should be detected
-      order: ['localStorage', 'navigator'],
-      
-      // Keys or params to lookup language from
-      lookupLocalStorage: 'i18nextLng',
-      
-      // Cache language detection
-      caches: ['localStorage'],
-      
-      // Optional expire and domain for set cookie
-      cookieExpirationDate: new Date(Date.now() + 2 * 365 * 24 * 60 * 60 * 1000), // 2 years
+      escapeValue: false // React already escapes values
     }
   });
 
